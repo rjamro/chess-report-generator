@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+aiohttp
+stockfish==3.28.0
