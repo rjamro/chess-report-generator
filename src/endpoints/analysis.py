@@ -1,6 +1,8 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, Path, Query
+
 from aiohttp import ClientSession
+from fastapi import APIRouter, Depends, Path, Query
+
 from dependencies.session import get_session
 from models.analysis import GameAnalysis
 from services.chesscom import ChessComApiService
@@ -14,7 +16,7 @@ async def get_stats(
     player_name: str = Path(title='The player name', max_length=100),
     month: int | None = Query(default=None, title='The month to analyze', ge=1, le=12),
     year: int | None = Query(default=None, title='The year to analyze', ge=2000, le=9999),
-    session: ClientSession  = Depends(get_session),
+    session: ClientSession = Depends(get_session),
 ):
     now = datetime.now()
 
