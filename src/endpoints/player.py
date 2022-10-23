@@ -12,7 +12,7 @@ router = APIRouter(prefix='/players', tags=['players'])
 @router.get(
     path='/{player_name}/',
     response_model=PlayerResponse,
-    responses={404: {'model': NotFound, 'description': 'Player does not exist.'}}
+    responses={404: {'model': NotFound, 'description': 'Player does not exist.'}},
 )
 async def get_player(
     player_name: str = Path(title="The player name"),

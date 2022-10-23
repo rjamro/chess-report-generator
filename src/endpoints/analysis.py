@@ -5,13 +5,18 @@ from fastapi import APIRouter, Depends, Path, Query
 
 from dependencies.session import get_session
 from models.analysis import GameAnalysis
+from models.errors import NotFound
 from services.chesscom import ChessComApiService
 from services.fastfish import FastfishApiService
 
 router = APIRouter(prefix='/analysis', tags=['analysis'])
 
 
-@router.get('/{player_name}/', response_model=GameAnalysis)
+@router.get(
+    path='/{player_name}/',
+    response_model=GameAnalysis,
+    responses={404: {'model': NotFound, 'description': 'Player does not exist.'}},
+)
 async def get_stats(
     player_name: str = Path(title='The player name', max_length=100),
     month: int | None = Query(default=None, title='The month to analyze', ge=1, le=12),
@@ -32,7 +37,6 @@ async def get_stats(
     analysis = await fastfish_api_service.get_analysis(
         games=games,
         player_name=player_name,
-        session=session,
     )
 
     return GameAnalysis(**analysis)

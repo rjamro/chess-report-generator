@@ -1,15 +1,18 @@
 from aiohttp import ClientSession
 from fastapi import HTTPException, status
+from settings import settings
 
 
 class ChessComApiService(object):
+    chesscom_url = settings.chesscom_url
+
     async def get_games(self, player_name: str, year: int, month: int, session: ClientSession) -> list[str]:
-        async with session.get(f'https://api.chess.com/pub/player/{player_name}/games/{year}/{month:02x}') as response:
+        async with session.get(f'{self.chesscom_url}/pub/player/{player_name}/games/{year}/{month:02x}') as response:
             decoded = await response.json()
             return [game['pgn'] for game in decoded['games']]
 
     async def get_player_stats(self, player_name: str, session: ClientSession) -> dict[str]:
-        async with session.get(f'https://api.chess.com/pub/player/{player_name}/stats') as response:
+        async with session.get(f'{self.chesscom_url}/pub/player/{player_name}/stats') as response:
             if response.status != status.HTTP_200_OK:
                 raise HTTPException(status_code=response.status)
 
